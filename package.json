@@ -1,0 +1,33 @@
+{
+    "name": "express-project-mgt",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "src/server.ts",
+    "scripts": {
+        "test": "jest --config jest.config.ts --detectOpenHandles --coverage --maxWorkers=1",
+        "dev": "pnpm dlx nodemon --exec tsx ./src/server.ts",
+        "build": "pnpm dlx tsc"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1",
+        "express-async-errors": "^3.1.1",
+        "helmet": "^8.0.0",
+        "zod": "^3.23.8",
+        "zod-express-middleware": "^1.4.0"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.12",
+        "@types/node": "^22.7.6",
+        "nodemon": "^3.1.7",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.3"
+    }
+}
