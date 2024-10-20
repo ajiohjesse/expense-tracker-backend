@@ -4,12 +4,12 @@ import { logHandler } from './middleware/logger.middleware.js';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'express-async-errors';
-import { apiV1Route } from '@/api/v1/apiV1.js';
 import '@/lib/env.config';
 import { createErrorResponse, createSuccessResponse } from './helpers/response.helpers.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { APP_CONFIG } from './lib/app.config.js';
 import { logger } from './helpers/logger.helpers.js';
+import { apiV1Route } from './api/v1/apiV1.js';
 
 const app = express();
 let httpServer: ReturnType<typeof http.createServer>;
