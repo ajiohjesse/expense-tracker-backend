@@ -1,5 +1,5 @@
-import { PublicError } from '@/helpers/error.helpers.js';
-import { createErrorResponse } from '@/helpers/response.helpers.js';
+import { PublicError } from '@/helpers/error.helpers.ts';
+import { createErrorResponse } from '@/helpers/response.helpers.ts';
 import type { ErrorRequestHandler } from 'express';
 
 export const errorHandler: ErrorRequestHandler = (error, _, response, __) => {

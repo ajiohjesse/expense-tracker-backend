@@ -1,8 +1,8 @@
 import express, { type Router } from 'express';
 import { validateRequest } from 'zod-express-middleware';
 import { z } from 'zod';
-import { db } from '@/db/index.js';
-import { createSuccessResponse } from '@/helpers/response.helpers.js';
+import { db } from '@/db/index.ts';
+import { createSuccessResponse } from '@/helpers/response.helpers.ts';
 
 const router: Router = express.Router();
 

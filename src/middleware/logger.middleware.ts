@@ -1,4 +1,4 @@
-import { logger } from '@/helpers/logger.helpers.js';
+import { logger } from '@/helpers/logger.helpers.ts';
 import type { Request, Response, NextFunction } from 'express';
 
 export function logHandler(req: Request, res: Response, next: NextFunction) {
