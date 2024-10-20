@@ -110,12 +110,10 @@ function error(message?: any, ...optionalParams: any[]) {
     }
 }
 
-const logger = {
+export const logger = {
     log,
     info,
     warn,
     error,
     getCallingFunction
 };
-
-export default logger;

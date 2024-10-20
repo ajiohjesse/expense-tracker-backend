@@ -1,11 +1,12 @@
-import logger from '@/lib/logger.js';
+import { logger } from '@/helpers/logger.helpers.js';
 import type { Request, Response, NextFunction } from 'express';
 
 export function logHandler(req: Request, res: Response, next: NextFunction) {
-    logger.log(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+    const URL = req.originalUrl;
+    logger.log(`Incoming - METHOD: [${req.method}] - URL: [${URL}] - IP: [${req.socket.remoteAddress}]`);
 
     res.on('finish', () => {
-        logger.log(`Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`);
+        logger.log(`Result - METHOD: [${req.method}] - URL: [${URL}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`);
     });
 
     next();

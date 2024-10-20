@@ -13,4 +13,14 @@ GET {{baseUrl}}/check/env
 # Test not-found route
 GET {{baseUrl}}/not-exist
 
+###
 
+# Test not-found route
+GET {{baseUrl}}/api/v1/users
+
+
+
+###
+
+# Test cookies
+GET {{baseUrl}}/cookies
