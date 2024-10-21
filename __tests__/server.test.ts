@@ -1,18 +1,14 @@
+import { expect, describe, it } from 'vitest';
 import request from 'supertest';
-import { app, shutdownServer } from '../src/server';
+import { app } from '../src/server.js';
 
 describe('Application', () => {
-    afterAll((done) => {
-        shutdownServer(done);
-    });
-
     it('should start with the proper test environment', async () => {
         expect(process.env.NODE_ENV).toBe('test');
     }, 10000);
 
     it('should return 200 on /check/health', async () => {
         const response = await request(app).get('/check/health');
-
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ success: true, data: 'Server is running', message: 'Operation successful' });
     });

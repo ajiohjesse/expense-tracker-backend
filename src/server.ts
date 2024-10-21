@@ -1,18 +1,18 @@
 import express, { type Response } from 'express';
-import http from 'http';
-import { logHandler } from './middleware/logger.middleware';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'express-async-errors';
-import './lib/env.config';
-import { createErrorResponse, createSuccessResponse } from './helpers/response.helpers';
-import { errorHandler } from './middleware/error.middleware';
-import { APP_CONFIG } from './lib/app.config';
-import { logger } from './helpers/logger.helpers';
-import { apiV1Route } from './api/v1/apiV1';
+import { apiV1Route } from './api/v1/apiV1.js';
+import { logger } from './helpers/logger.helpers.js';
+import { APP_CONFIG } from './lib/app.config.js';
+import { errorHandler } from './middleware/error.middleware.js';
+import { logHandler } from './middleware/logger.middleware.js';
+import { envConfig } from './lib/env.config.js';
+import { checksRoute } from './api/checks/checksRoute.js';
+import { notFoundHandler } from './middleware/notfound.middleware.js';
 
+envConfig();
 export const app = express();
-let httpServer: ReturnType<typeof http.createServer>;
 
 export const Main = () => {
     logger.log('Initializing API...');
@@ -23,40 +23,15 @@ export const Main = () => {
     app.use(cors());
     app.use(logHandler);
 
-    app.get('/check/health', (_, res) => {
-        return res.status(200).json(createSuccessResponse('Server is running'));
-    });
-
-    app.get('/check/env', (req, res) => {
-        logger.info(req.headers.cookie);
-
-        return res.status(200).json(
-            createSuccessResponse({
-                environment: process.env.NODE_ENV || null
-            })
-        );
-    });
-
-    //API V1
+    app.use('/checks', checksRoute);
     app.use('/api/v1', apiV1Route);
 
-    //Not found routes
-    app.use((_, res: Response) => {
-        return res.status(404).json(createErrorResponse('Resource Not found'));
-    });
-
-    //Error handling
+    app.use(notFoundHandler);
     app.use(errorHandler);
 
-    httpServer = http.createServer(app);
-    httpServer.listen(APP_CONFIG.port, () => {
+    app.listen(APP_CONFIG.port, () => {
         logger.log(`Server started on ${APP_CONFIG.hostname}:${APP_CONFIG.port}`);
     });
 };
 
-export const shutdownServer = (callback: any) => {
-    httpServer && httpServer.close(callback);
-};
-
-// start server
 Main();
