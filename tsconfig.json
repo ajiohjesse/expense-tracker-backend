@@ -1,20 +1,15 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        },
-        "target": "es2022",
+        "target": "ES2022",
         "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
         "esModuleInterop": true,
-        "outDir": "dist",
+        "outDir": "build",
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "skipLibCheck": true,
-        "module": "Node16",
-        "allowImportingTsExtensions": true,
-        "noEmit": true,
-        "types": ["jest"]
+        "types": ["jest"],
+        "module": "CommonJS"
     },
     "exclude": ["node_modules/"],
     "include": ["src/**/*.ts", "__tests__/**/*.ts"]

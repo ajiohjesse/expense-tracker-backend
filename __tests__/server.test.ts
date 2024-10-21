@@ -1,5 +1,5 @@
-import { app, shutdownServer } from '@/server.ts';
 import request from 'supertest';
+import { app, shutdownServer } from '../src/server';
 
 describe('Application', () => {
     afterAll((done) => {

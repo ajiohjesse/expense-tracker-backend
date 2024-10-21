@@ -1,15 +1,15 @@
 import express, { type Response } from 'express';
 import http from 'http';
-import { logHandler } from './middleware/logger.middleware.ts';
+import { logHandler } from './middleware/logger.middleware';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'express-async-errors';
-import '@/lib/env.config';
-import { createErrorResponse, createSuccessResponse } from './helpers/response.helpers.ts';
-import { errorHandler } from './middleware/error.middleware.ts';
-import { APP_CONFIG } from './lib/app.config.ts';
-import { logger } from './helpers/logger.helpers.ts';
-import { apiV1Route } from './api/v1/apiV1.ts';
+import './lib/env.config';
+import { createErrorResponse, createSuccessResponse } from './helpers/response.helpers';
+import { errorHandler } from './middleware/error.middleware';
+import { APP_CONFIG } from './lib/app.config';
+import { logger } from './helpers/logger.helpers';
+import { apiV1Route } from './api/v1/apiV1';
 
 export const app = express();
 let httpServer: ReturnType<typeof http.createServer>;
