@@ -1,7 +1,7 @@
-import { drizzle } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client';
-import * as schema from './schema.js';
 import { envConfig } from '@/lib/env.config.js';
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
+import * as schema from './schema.js';
 
 envConfig();
 

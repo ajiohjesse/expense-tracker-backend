@@ -1,6 +1,6 @@
-import express, { type Router } from 'express';
-import { createSuccessResponse } from '@/helpers/response.helpers.js';
 import { db } from '@/db/index.js';
+import { createSuccessResponse } from '@/helpers/response.helpers.js';
+import express, { type Router } from 'express';
 
 const router: Router = express.Router();
 

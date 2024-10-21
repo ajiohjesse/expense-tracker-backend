@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 // Extend the Express Request interface globally
 declare global {
     namespace Express {

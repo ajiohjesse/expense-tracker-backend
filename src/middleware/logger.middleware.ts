@@ -1,5 +1,5 @@
 import { logger } from '@/helpers/logger.helpers.js';
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export function logHandler(req: Request, res: Response, next: NextFunction) {
     const URL = req.originalUrl;

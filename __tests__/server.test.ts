@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'vitest';
 import request from 'supertest';
+import { describe, expect, it } from 'vitest';
 import { app } from '../src/server.js';
 
 describe('Application', () => {
@@ -15,7 +15,6 @@ describe('Application', () => {
 
     it('should return 200 with correct test environment on /check/env', async () => {
         const response = await request(app).get('/check/env');
-
         expect(response.status).toBe(200);
         expect(response.body).toEqual({ success: true, message: 'Operation successful', data: { environment: 'test' } });
     });
