@@ -1,7 +1,7 @@
-import { createSuccessResponse } from '@/helpers/response.helpers.js';
-import { APP_CONFIG } from '@/lib/app.config.js';
 import { Router } from 'express';
 import { validateRequestBody } from 'zod-express-middleware';
+import { createSuccessResponse } from '../../../../helpers/response.helpers.js';
+import { APP_CONFIG } from '../../../../lib/app.config.js';
 import { LoginSchema, RegisterSchema } from './auth.schema.js';
 import * as authService from './auth.service.js';
 

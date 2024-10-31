@@ -1,5 +1,5 @@
-import { createSuccessResponse } from '@/helpers/response.helpers.js';
 import express from 'express';
+import { createSuccessResponse } from '../../helpers/response.helpers.js';
 
 const router = express.Router();
 export { router as checksRoute };

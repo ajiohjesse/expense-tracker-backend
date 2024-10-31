@@ -1,6 +1,6 @@
-import { envConfig } from '@/lib/env.config.js';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
+import { envConfig } from '../lib/env.config.js';
 import * as schema from './schema.js';
 
 envConfig();

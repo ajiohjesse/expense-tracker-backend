@@ -10,9 +10,9 @@ const generateSecret = () => {
 };
 
 const generateSecrets = () => {
-    const secretsString = `ACCESS_TOKEN_SECRET = ${generateSecret()}
-REFRESH_TOKEN_SECRET = ${generateSecret()}
-COOKIE_SECRET = ${generateSecret()}`;
+    const secretsString = `ACCESS_TOKEN_SECRET=${generateSecret()}
+REFRESH_TOKEN_SECRET=${generateSecret()}
+COOKIE_SECRET=${generateSecret()}`;
 
     fs.writeFileSync(secretFilePath, secretsString);
 };

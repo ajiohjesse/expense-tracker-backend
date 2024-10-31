@@ -1,10 +1,10 @@
-//@ts-nocheck
 import type { Config } from 'drizzle-kit';
-import { envConfig } from './src/lib/env.config';
+import { envConfig } from './src/lib/env.config.js';
+
 envConfig();
 
 export default {
-    schema: './src/db/schema.ts',
+    schema: './build/src/db/schema.js',
     out: './src/db/migrations',
     dialect: 'turso',
     dbCredentials: {

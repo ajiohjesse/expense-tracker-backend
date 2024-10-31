@@ -1,7 +1,6 @@
-//@ts-nocheck
-import { generateDatabaseId } from '@/lib/nanoid';
 import { sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { generateDatabaseId } from '../lib/nanoid.js';
 
 export const userTable = sqliteTable(
     'users',

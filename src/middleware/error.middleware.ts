@@ -1,6 +1,6 @@
-import { PublicError } from '@/helpers/error.helpers.js';
-import { createErrorResponse } from '@/helpers/response.helpers.js';
 import type { ErrorRequestHandler } from 'express';
+import { PublicError } from '../helpers/error.helpers.js';
+import { createErrorResponse } from '../helpers/response.helpers.js';
 
 export const errorHandler: ErrorRequestHandler = (error, _, response, __) => {
     if (error instanceof PublicError) {

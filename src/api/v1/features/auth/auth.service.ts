@@ -1,11 +1,11 @@
-import { db } from '@/db/index.js';
-import { userTable } from '@/db/schema.js';
-import { PublicError } from '@/helpers/error.helpers.js';
-import { APP_CONFIG } from '@/lib/app.config.js';
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken, type AccessTokenPayload } from '@/lib/tokens.js';
 import bcrypt from 'bcryptjs';
 import type { Response } from 'express';
 import type { z } from 'zod';
+import { db } from '../../../../db/index.js';
+import { userTable } from '../../../../db/schema.js';
+import { PublicError } from '../../../../helpers/error.helpers.js';
+import { APP_CONFIG } from '../../../../lib/app.config.js';
+import { type AccessTokenPayload, generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../../../../lib/tokens.js';
 import { LoginSchema, RegisterSchema } from './auth.schema.js';
 
 export const login = async (payload: z.infer<typeof LoginSchema>) => {
