@@ -10,7 +10,9 @@ export const userTable = sqliteTable(
         email: text().unique().notNull(),
         fullName: text('full_name').notNull(),
         passwordHash: text('password_hash'),
-        isEmailVerified: integer('is_email_verified', { mode: 'boolean' }).default(false),
+        isEmailVerified: integer('is_email_verified', {
+            mode: 'boolean'
+        }).default(false),
         createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
     },
     (table) => ({
@@ -22,7 +24,9 @@ export const inflowCategoryTable = sqliteTable('inflow_categories', {
     id: integer().primaryKey({ autoIncrement: true }),
     userId: text('user_id')
         .notNull()
-        .references(() => userTable.id, { onDelete: 'cascade' }),
+        .references(() => userTable.id, {
+            onDelete: 'cascade'
+        }),
     name: text().notNull(),
     type: text().notNull(),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
@@ -36,7 +40,9 @@ export const inflowTable = sqliteTable('inflows', {
     amount: integer().notNull(),
     categoryId: text('category_id')
         .notNull()
-        .references(() => inflowCategoryTable.id, { onDelete: 'cascade' }),
+        .references(() => inflowCategoryTable.id, {
+            onDelete: 'cascade'
+        }),
     description: text(),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
 });
@@ -45,7 +51,9 @@ export const outflowCategoryTable = sqliteTable('outflow_categories', {
     id: integer().primaryKey({ autoIncrement: true }),
     userId: text('user_id')
         .notNull()
-        .references(() => userTable.id, { onDelete: 'cascade' }),
+        .references(() => userTable.id, {
+            onDelete: 'cascade'
+        }),
     name: text().notNull(),
     type: text().notNull(),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
@@ -59,7 +67,9 @@ export const outflowTable = sqliteTable('outflows', {
     amount: integer().notNull(),
     categoryId: text('category_id')
         .notNull()
-        .references(() => inflowCategoryTable.id, { onDelete: 'cascade' }),
+        .references(() => inflowCategoryTable.id, {
+            onDelete: 'cascade'
+        }),
     description: text(),
     createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
 });

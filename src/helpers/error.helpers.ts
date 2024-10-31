@@ -11,6 +11,10 @@ export class PublicError extends Error {
     }
 }
 
-export const createError = (statusCode: number, message: string, data: unknown = null) => {
+export const createError = (
+    statusCode: number,
+    message: string,
+    data: unknown = null
+) => {
     return new PublicError(statusCode, message, data);
 };

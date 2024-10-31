@@ -56,7 +56,15 @@ function getCallingFunction(error: Error) {
 }
 
 function log(message?: any, ...optionalParams: any[]) {
-    if (!TEST) console.log(`[${new Date().toLocaleString()}]`, colours.fg.magenta, '[SERVER-LOG] ', colours.reset, message, ...optionalParams);
+    if (!TEST)
+        console.log(
+            `[${new Date().toLocaleString()}]`,
+            colours.fg.magenta,
+            '[SERVER-LOG] ',
+            colours.reset,
+            message,
+            ...optionalParams
+        );
 }
 
 function info(message?: any, ...optionalParams: any[]) {

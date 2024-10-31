@@ -11,16 +11,23 @@ export interface RefreshTokenPayload {
 }
 
 export const generateAccessToken = (payload: AccessTokenPayload) => {
-    return jwt.sign(payload, APP_CONFIG.accessTokenSecret, { expiresIn: APP_CONFIG.accessTokenExpiry });
+    return jwt.sign(payload, APP_CONFIG.accessTokenSecret, {
+        expiresIn: APP_CONFIG.accessTokenExpiry
+    });
 };
 
 export const generateRefreshToken = (payload: RefreshTokenPayload) => {
-    return jwt.sign(payload, APP_CONFIG.refreshTokenSecret, { expiresIn: APP_CONFIG.refreshTokenExpiry });
+    return jwt.sign(payload, APP_CONFIG.refreshTokenSecret, {
+        expiresIn: APP_CONFIG.refreshTokenExpiry
+    });
 };
 
 export const verifyAccessToken = (token: string) => {
     try {
-        return jwt.verify(token, APP_CONFIG.accessTokenSecret) as AccessTokenPayload;
+        return jwt.verify(
+            token,
+            APP_CONFIG.accessTokenSecret
+        ) as AccessTokenPayload;
     } catch (error) {
         return null;
     }
@@ -28,7 +35,10 @@ export const verifyAccessToken = (token: string) => {
 
 export const verifyRefreshToken = (token: string) => {
     try {
-        return jwt.verify(token, APP_CONFIG.refreshTokenSecret) as RefreshTokenPayload;
+        return jwt.verify(
+            token,
+            APP_CONFIG.refreshTokenSecret
+        ) as RefreshTokenPayload;
     } catch (error) {
         return null;
     }

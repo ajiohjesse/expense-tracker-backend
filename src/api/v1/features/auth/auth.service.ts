@@ -5,7 +5,12 @@ import { db } from '../../../../db/index.js';
 import { userTable } from '../../../../db/schema.js';
 import { PublicError } from '../../../../helpers/error.helpers.js';
 import { APP_CONFIG } from '../../../../lib/app.config.js';
-import { type AccessTokenPayload, generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../../../../lib/tokens.js';
+import {
+    type AccessTokenPayload,
+    generateAccessToken,
+    generateRefreshToken,
+    verifyRefreshToken
+} from '../../../../lib/tokens.js';
 import { LoginSchema, RegisterSchema } from './auth.schema.js';
 
 export const login = async (payload: z.infer<typeof LoginSchema>) => {
@@ -26,15 +31,21 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
     return { user };
 };
 
-export const generateAndSetUserTokens = async (tokenPayload: AccessTokenPayload, res: Response) => {
+export const generateAndSetUserTokens = async (
+    tokenPayload: AccessTokenPayload,
+    res: Response
+) => {
     const accessToken = generateAccessToken(tokenPayload);
-    const refreshToken = generateRefreshToken({ userId: tokenPayload.userId });
+    const refreshToken = generateRefreshToken({
+        userId: tokenPayload.userId
+    });
 
     res.cookie(APP_CONFIG.refreshCookieName, refreshToken, {
         httpOnly: true,
         secure: APP_CONFIG.nodeEnv === 'production',
         sameSite: 'lax',
-        maxAge: APP_CONFIG.refreshCookieExpiry
+        maxAge: APP_CONFIG.refreshCookieExpiry,
+        signed: true
     });
 
     return { accessToken };

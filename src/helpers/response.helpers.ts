@@ -4,7 +4,10 @@ interface APIResponse {
     data: unknown;
 }
 
-export const createSuccessResponse = <T extends any>(data: T | null = null, message: string = 'Operation successful'): APIResponse => {
+export const createSuccessResponse = <T extends any>(
+    data: T | null = null,
+    message: string = 'Operation successful'
+): APIResponse => {
     return {
         success: true,
         data,
@@ -12,7 +15,10 @@ export const createSuccessResponse = <T extends any>(data: T | null = null, mess
     };
 };
 
-export const createErrorResponse = (message: string = 'Operation failed', data: unknown = null): APIResponse => {
+export const createErrorResponse = (
+    message: string = 'Operation failed',
+    data: unknown = null
+): APIResponse => {
     return {
         success: false,
         data,
