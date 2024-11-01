@@ -10,3 +10,17 @@ export const RegisterSchema = z.object({
     fullName: z.string(),
     password: z.string()
 });
+
+export const ResetPasswordSchema = z.object({
+    email: z.string().email()
+});
+
+export const CreatePasswordSchema = z.object({
+    resetToken: z.string(),
+    password: z.string()
+});
+
+export const GoogleOauthQuerySchema = z.object({
+    code: z.string(),
+    state: z.string()
+});
