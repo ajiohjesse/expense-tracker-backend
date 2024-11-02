@@ -58,3 +58,21 @@ export const verifyPasswordResetToken = (token: string) => {
         return null;
     }
 };
+
+export const generateEmailToken = (payload: TokenPayload) => {
+    const { userId } = payload;
+    return jwt.sign({ userId }, APP_CONFIG.emailVerificationSecret, {
+        expiresIn: APP_CONFIG.emailVerifyTokenExpiry
+    });
+};
+
+export const verifyEmailToken = (token: string) => {
+    try {
+        return jwt.verify(
+            token,
+            APP_CONFIG.emailVerificationSecret
+        ) as TokenPayload;
+    } catch (error) {
+        return null;
+    }
+};

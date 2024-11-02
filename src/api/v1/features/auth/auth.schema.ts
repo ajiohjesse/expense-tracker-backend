@@ -11,6 +11,10 @@ export const RegisterSchema = z.object({
     password: z.string()
 });
 
+export const VerifyEmailQuerySchema = z.object({
+    token: z.string()
+});
+
 export const ResetPasswordSchema = z.object({
     email: z.string().email()
 });

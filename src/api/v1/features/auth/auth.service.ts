@@ -4,6 +4,8 @@ import type { Response } from 'express';
 import type { z } from 'zod';
 import { db } from '../../../../db/index.js';
 import { userTable } from '../../../../db/schema.js';
+import { resetPwdEmailTemplate } from '../../../../emails/resetPwdEmailTemplate.js';
+import { sendEmail } from '../../../../helpers/email.helpers.js';
 import { PublicError } from '../../../../helpers/error.helpers.js';
 import { logger } from '../../../../helpers/logger.helpers.js';
 import { APP_CONFIG } from '../../../../lib/app.config.js';
@@ -16,6 +18,7 @@ import {
     verifyPasswordResetToken,
     verifyRefreshToken
 } from '../../../../lib/tokens.js';
+import { createDefaultCategories } from '../category/category.service.js';
 import {
     CreatePasswordSchema,
     LoginSchema,
@@ -36,6 +39,10 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
     const isPasswordCorrect = bcrypt.compare(password, user.passwordHash);
     if (!isPasswordCorrect) {
         throw new PublicError(401, 'Incorrect email or password');
+    }
+
+    if (!user.isEmailVerified) {
+        throw new PublicError(401, 'Please verify your email');
     }
 
     return { user };
@@ -109,6 +116,30 @@ export const register = async (payload: z.infer<typeof RegisterSchema>) => {
     return { user };
 };
 
+export const verifyEmail = async (userId: string) => {
+    const dbUser = await db.query.userTable.findFirst({
+        where: (table, { eq }) => eq(table.id, userId)
+    });
+
+    if (!dbUser) {
+        throw new PublicError(404, 'User not found');
+    }
+
+    if (dbUser.isEmailVerified) {
+        throw new PublicError(400, 'Email already verified');
+    }
+
+    const [user] = await db
+        .update(userTable)
+        .set({ isEmailVerified: true })
+        .where(eq(userTable.id, userId))
+        .returning();
+
+    await createDefaultCategories(user.id);
+
+    return { user };
+};
+
 export const sendPasswordResetEmail = async (email: string) => {
     const user = await db.query.userTable.findFirst({
         where: (table, { eq }) => eq(table.email, email)
@@ -116,7 +147,19 @@ export const sendPasswordResetEmail = async (email: string) => {
 
     if (user) {
         const resetToken = generatePasswordResetToken({ userId: user.id });
-        //TODO: send email with reset token
+
+        await db
+            .update(userTable)
+            .set({ metadata: { passwordResetToken: resetToken } })
+            .where(eq(userTable.id, user.id));
+
+        const resetLink = `${APP_CONFIG.clientUrl}/auth/create-password?token=${resetToken}`;
+
+        await sendEmail({
+            to: user.email,
+            subject: 'MyFinance - Password Reset',
+            html: resetPwdEmailTemplate({ name: user.fullName, resetLink })
+        });
     }
 };
 
@@ -124,7 +167,6 @@ export const createNewPassword = async (
     payload: z.infer<typeof CreatePasswordSchema>
 ) => {
     const { resetToken, password } = payload;
-
     const tokenPayload = verifyPasswordResetToken(resetToken);
 
     if (!tokenPayload) {
@@ -139,12 +181,16 @@ export const createNewPassword = async (
         throw new PublicError(401, 'Invalid or expired reset token');
     }
 
+    if (!user.metadata || user.metadata.passwordResetToken !== resetToken) {
+        throw new PublicError(401, 'Invalid or expired reset token');
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await db
         .update(userTable)
-        .set({ passwordHash: hashedPassword })
+        .set({ passwordHash: hashedPassword, isEmailVerified: true })
         .where(eq(userTable.id, user.id));
 };
 
@@ -188,6 +234,8 @@ export const loginGoogleUser = async (
                     isEmailVerified: true
                 })
                 .returning();
+
+            await createDefaultCategories(newAccount.id);
 
             const { accessToken } = await generateAndSetUserTokens(
                 {
