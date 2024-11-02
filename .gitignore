@@ -37,3 +37,4 @@ yarn-error.log*
 #others
 __local__
 *.db
+http

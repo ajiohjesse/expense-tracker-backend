@@ -10,11 +10,3 @@ export class PublicError extends Error {
         Error.captureStackTrace(this, this.constructor);
     }
 }
-
-export const createError = (
-    statusCode: number,
-    message: string,
-    data: unknown = null
-) => {
-    return new PublicError(statusCode, message, data);
-};

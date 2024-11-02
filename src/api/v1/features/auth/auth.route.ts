@@ -4,6 +4,8 @@ import {
     validateRequestBody,
     validateRequestQuery
 } from 'zod-express-middleware';
+import { verifyEmailTemplate } from '../../../../emails/verifyEmailTemplate.js';
+import { sendEmail } from '../../../../helpers/email.helpers.js';
 import {
     createErrorResponse,
     createSuccessResponse
@@ -11,11 +13,16 @@ import {
 import { APP_CONFIG } from '../../../../lib/app.config.js';
 import { googleOauthClient } from '../../../../lib/oauth.js';
 import {
+    generateEmailToken,
+    verifyEmailToken
+} from '../../../../lib/tokens.js';
+import {
     CreatePasswordSchema,
     GoogleOauthQuerySchema,
     LoginSchema,
     RegisterSchema,
-    ResetPasswordSchema
+    ResetPasswordSchema,
+    VerifyEmailQuerySchema
 } from './auth.schema.js';
 import * as authService from './auth.service.js';
 
@@ -36,6 +43,7 @@ router.post(
         return response.status(200).json(
             createSuccessResponse(
                 {
+                    id: user.id,
                     email: user.email,
                     name: user.fullName,
                     accessToken
@@ -67,19 +75,65 @@ router.post(
     async (request, response) => {
         const { user } = await authService.register(request.body);
 
-        const { accessToken } = await authService.generateAndSetUserTokens(
-            { userId: user.id, issuedVia: 'login' },
-            response
-        );
+        const emailVerifyToken = generateEmailToken({ userId: user.id });
+        const verifyLink = `${APP_CONFIG.clientUrl}/auth/verify-email?token=${emailVerifyToken}`;
+
+        await sendEmail({
+            to: user.email,
+            subject: 'MyFinance - Verify your email',
+            html: verifyEmailTemplate({ name: user.fullName, verifyLink })
+        });
 
         return response.status(201).json(
             createSuccessResponse(
                 {
+                    id: user.id,
                     email: user.email,
-                    name: user.fullName,
+                    name: user.fullName
+                },
+                'Registration successful. You will receive a verification email shortly'
+            )
+        );
+    }
+);
+
+router.post(
+    '/verify-email',
+    validateRequestQuery(VerifyEmailQuerySchema),
+    async (request, response) => {
+        const { token } = request.query;
+        const user = verifyEmailToken(token);
+        if (!user) {
+            return response
+                .status(401)
+                .json(
+                    createErrorResponse(
+                        'Invalid or expired email verification token'
+                    )
+                );
+        }
+
+        const { user: verifiedUser } = await authService.verifyEmail(
+            user.userId
+        );
+
+        const { accessToken } = await authService.generateAndSetUserTokens(
+            {
+                userId: verifiedUser.id,
+                issuedVia: 'login'
+            },
+            response
+        );
+
+        return response.status(200).json(
+            createSuccessResponse(
+                {
+                    id: verifiedUser.id,
+                    email: verifiedUser.email,
+                    name: verifiedUser.fullName,
                     accessToken
                 },
-                'Registration successful'
+                'Email verified successfully'
             )
         );
     }
@@ -132,10 +186,19 @@ router.get('/google', async (_, response) => {
         signed: true
     });
 
+    response.cookie(APP_CONFIG.googleCodeVerifierCookieName, codeVerifier, {
+        secure: APP_CONFIG.nodeEnv === 'production',
+        path: '/',
+        sameSite: 'lax',
+        httpOnly: true,
+        maxAge: APP_CONFIG.googleAuthCookieMaxAge,
+        signed: true
+    });
+
     response.redirect(url.toString());
 });
 
-router.get(
+router.post(
     '/google/callback',
     validateRequestQuery(GoogleOauthQuerySchema),
     async (request, response) => {
@@ -163,6 +226,7 @@ router.get(
         return response.status(200).json(
             createSuccessResponse(
                 {
+                    id: user.id,
                     email: user.email,
                     name: user.fullName,
                     accessToken
