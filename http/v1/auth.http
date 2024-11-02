@@ -1,25 +1,53 @@
 @baseUrl = http://localhost:8080
 
+### LOGIN
 POST {{baseUrl}}/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
-    "password": "test"
+    "email": "jessejas619@gmail.com",
+    "password": "password"
 }
 
-###
-
+### REGISTER
 POST {{baseUrl}}/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "test@test.com",
-    "password": "test",
-    "fullName": "Test User"
+    "email": "jessejas619@gmail.com",
+    "password": "password",
+    "fullName": "Jesse Ajioh"
 }
 
-###
-
+### REFRESH
 GET {{baseUrl}}/api/v1/auth/refresh
+Content-Type: application/json
+
+### VERIFY EMAIL
+POST {{baseUrl}}/api/v1/auth/verify-email?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJQa0Z5bTB2ellvIiwiaWF0IjoxNzMwNTg3MTc1LCJleHAiOjE3MzExOTE5NzV9.V_CNf5lVQHOSQgqKJuwztK6sXWmOP10JQZOY80mhWHs
+Content-Type: application/json
+
+### RESET PASSWORD
+POST {{baseUrl}}/api/v1/auth/reset-password
+Content-Type: application/json
+
+{
+    "email": "jessejas619@gmail.com"
+}
+
+### CREATE PASSWORD
+POST {{baseUrl}}/api/v1/auth/create-password
+Content-Type: application/json
+
+{
+     "password": "password",
+     "resetToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJQa0Z5bTB2ellvIiwiaWF0IjoxNzMwNTg3NjkwLCJleHAiOjE3MzA1ODk0OTB9.S54AFjCBTOWHuNaTiDzWWUt6urZ5fFt9Gnte6nD9LUk"
+}
+
+### GOOGLE OAUTH
+GET {{baseUrl}}/api/v1/auth/google
+Content-Type: application/json
+
+### GOOGLE OAUTH CALLBACK
+POST {{baseUrl}}/api/v1/auth/google/callback?code=some-code&state=some-state
 Content-Type: application/json
