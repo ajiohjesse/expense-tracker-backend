@@ -14,6 +14,7 @@ const generateSecrets = () => {
 REFRESH_TOKEN_SECRET=${generateSecret()}
 COOKIE_SECRET=${generateSecret()}
 PASSWORD_RESET_SECRET=${generateSecret()}
+EMAIL_VERIFICATION_SECRET=${generateSecret()}
 `;
 
     fs.writeFileSync(secretFilePath, secretsString);

@@ -190,7 +190,11 @@ export const createNewPassword = async (
 
     await db
         .update(userTable)
-        .set({ passwordHash: hashedPassword, isEmailVerified: true })
+        .set({
+            passwordHash: hashedPassword,
+            isEmailVerified: true,
+            metadata: { passwordResetToken: '' }
+        })
         .where(eq(userTable.id, user.id));
 };
 

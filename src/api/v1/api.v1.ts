@@ -1,6 +1,7 @@
 import express from 'express';
 import { authRoute } from './features/auth/auth.route.js';
 import { budgetRoute } from './features/budget/budget.route.js';
+import { categoryRoute } from './features/category/category.route.js';
 import { inflowRoute } from './features/inflow/inflow.route.js';
 import { outflowRoute } from './features/outflow/outlflow.route.js';
 import { userRoute } from './features/user/user.route.js';
@@ -12,4 +13,5 @@ router.use('/auth', authRoute);
 router.use('/user', userRoute);
 router.use('/inflow', inflowRoute);
 router.use('/outflow', outflowRoute);
+router.use('/category', categoryRoute);
 router.use('/budget', budgetRoute);
