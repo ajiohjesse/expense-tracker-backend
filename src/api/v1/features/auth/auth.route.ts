@@ -4,18 +4,13 @@ import {
     validateRequestBody,
     validateRequestQuery
 } from 'zod-express-middleware';
-import { verifyEmailTemplate } from '../../../../emails/verifyEmailTemplate.js';
-import { sendEmail } from '../../../../helpers/email.helpers.js';
 import {
     createErrorResponse,
     createSuccessResponse
 } from '../../../../helpers/response.helpers.js';
 import { APP_CONFIG } from '../../../../lib/app.config.js';
 import { googleOauthClient } from '../../../../lib/oauth.js';
-import {
-    generateEmailToken,
-    verifyEmailToken
-} from '../../../../lib/tokens.js';
+import { verifyEmailToken } from '../../../../lib/tokens.js';
 import {
     CreatePasswordSchema,
     GoogleOauthQuerySchema,
@@ -74,15 +69,6 @@ router.post(
     validateRequestBody(RegisterSchema),
     async (request, response) => {
         const { user } = await authService.register(request.body);
-
-        const emailVerifyToken = generateEmailToken({ userId: user.id });
-        const verifyLink = `${APP_CONFIG.clientUrl}/auth/verify-email?token=${emailVerifyToken}`;
-
-        await sendEmail({
-            to: user.email,
-            subject: 'MyFinance - Verify your email',
-            html: verifyEmailTemplate({ name: user.fullName, verifyLink })
-        });
 
         return response.status(201).json(
             createSuccessResponse(

@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import { APP_CONFIG } from '../lib/app.config.js';
-import { logger } from './logger.helpers.js';
+import { PublicError } from './error.helpers.js';
 
 const resend = new Resend(APP_CONFIG.resendAPIKey);
 
@@ -11,14 +11,14 @@ interface EmailProps {
 }
 
 export const sendEmail = async ({ to, subject, html }: EmailProps) => {
-    logger.info(`Sending email to ${to} with subject ${subject}`);
-
-    const res = await resend.emails.send({
+    const response = await resend.emails.send({
         from: `MyFinance <${APP_CONFIG.emailDomain}>`,
         to,
         subject,
         html
     });
 
-    logger.info('Email response', res);
+    if (response.error) {
+        throw new PublicError(500, 'Unable to send email -> ', response);
+    }
 };

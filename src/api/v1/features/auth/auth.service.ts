@@ -5,6 +5,7 @@ import type { z } from 'zod';
 import { db } from '../../../../db/index.js';
 import { userTable } from '../../../../db/schema.js';
 import { resetPwdEmailTemplate } from '../../../../emails/resetPwdEmailTemplate.js';
+import { verifyEmailTemplate } from '../../../../emails/verifyEmailTemplate.js';
 import { sendEmail } from '../../../../helpers/email.helpers.js';
 import { PublicError } from '../../../../helpers/error.helpers.js';
 import { logger } from '../../../../helpers/logger.helpers.js';
@@ -13,6 +14,7 @@ import { googleOauthClient } from '../../../../lib/oauth.js';
 import {
     type AccessTokenPayload,
     generateAccessToken,
+    generateEmailToken,
     generatePasswordResetToken,
     generateRefreshToken,
     verifyPasswordResetToken,
@@ -103,15 +105,28 @@ export const register = async (payload: z.infer<typeof RegisterSchema>) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const [user] = await db
-        .insert(userTable)
-        .values({
-            email,
-            fullName,
-            passwordHash: hashedPassword,
-            isEmailVerified: false
-        })
-        .returning();
+    const user = await db.transaction(async (tx) => {
+        const [user] = await db
+            .insert(userTable)
+            .values({
+                email,
+                fullName,
+                passwordHash: hashedPassword,
+                isEmailVerified: false
+            })
+            .returning();
+
+        const emailVerifyToken = generateEmailToken({ userId: user.id });
+        const verifyLink = `${APP_CONFIG.clientUrl}/auth/verify-email?token=${emailVerifyToken}`;
+
+        await sendEmail({
+            to: user.email,
+            subject: 'MyFinance - Verify your email',
+            html: verifyEmailTemplate({ name: user.fullName, verifyLink })
+        });
+
+        return user;
+    });
 
     return { user };
 };
@@ -148,17 +163,19 @@ export const sendPasswordResetEmail = async (email: string) => {
     if (user) {
         const resetToken = generatePasswordResetToken({ userId: user.id });
 
-        await db
-            .update(userTable)
-            .set({ metadata: { passwordResetToken: resetToken } })
-            .where(eq(userTable.id, user.id));
+        await db.transaction(async (tx) => {
+            await tx
+                .update(userTable)
+                .set({ metadata: { passwordResetToken: resetToken } })
+                .where(eq(userTable.id, user.id));
 
-        const resetLink = `${APP_CONFIG.clientUrl}/auth/create-password?token=${resetToken}`;
+            const resetLink = `${APP_CONFIG.clientUrl}/auth/create-password?token=${resetToken}`;
 
-        await sendEmail({
-            to: user.email,
-            subject: 'MyFinance - Password Reset',
-            html: resetPwdEmailTemplate({ name: user.fullName, resetLink })
+            await sendEmail({
+                to: user.email,
+                subject: 'MyFinance - Password Reset',
+                html: resetPwdEmailTemplate({ name: user.fullName, resetLink })
+            });
         });
     }
 };
