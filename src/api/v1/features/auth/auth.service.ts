@@ -106,7 +106,7 @@ export const register = async (payload: z.infer<typeof RegisterSchema>) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await db.transaction(async (tx) => {
-        const [user] = await db
+        const [user] = await tx
             .insert(userTable)
             .values({
                 email,
