@@ -38,7 +38,7 @@ export const login = async (payload: z.infer<typeof LoginSchema>) => {
         throw new PublicError(401, 'Incorrect email or password');
     }
 
-    const isPasswordCorrect = bcrypt.compare(password, user.passwordHash);
+    const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordCorrect) {
         throw new PublicError(401, 'Incorrect email or password');
     }
