@@ -16,6 +16,7 @@
         "db:migrate:prod": "cross-env NODE_ENV=production tsx src/db/migrate.ts",
         "db:studio": "drizzle-kit studio --config build/drizzle.config.js",
         "db:drop": "drizzle-kit drop --config build/drizzle.config.js",
+        "db:push": "drizzle-kit push",
         "format": "prettier --write .",
         "generateSecrets": "node scripts/generateSecrets.mjs"
     },

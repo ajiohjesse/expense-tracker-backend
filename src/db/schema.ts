@@ -12,7 +12,9 @@ export const userTable = sqliteTable(
         passwordHash: text('password_hash'),
         isEmailVerified: integer('is_email_verified', {
             mode: 'boolean'
-        }).default(false),
+        })
+            .default(false)
+            .notNull(),
         createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
         metadata: text('metadata', { mode: 'json' }).$type<{
             passwordResetToken: string;
@@ -31,7 +33,9 @@ export const inflowCategoryTable = sqliteTable('inflow_categories', {
             onDelete: 'cascade'
         }),
     name: text().notNull(),
-    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
+    createdAt: text('created_at')
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull()
 });
 
 export const inflowTable = sqliteTable('inflows', {
@@ -46,7 +50,9 @@ export const inflowTable = sqliteTable('inflows', {
             onDelete: 'cascade'
         }),
     description: text(),
-    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
+    createdAt: text('created_at')
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull()
 });
 
 export const inflowRelations = relations(inflowTable, ({ one }) => ({
@@ -64,7 +70,9 @@ export const outflowCategoryTable = sqliteTable('outflow_categories', {
             onDelete: 'cascade'
         }),
     name: text().notNull(),
-    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
+    createdAt: text('created_at')
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull()
 });
 
 export const outflowTable = sqliteTable('outflows', {
@@ -79,7 +87,9 @@ export const outflowTable = sqliteTable('outflows', {
             onDelete: 'cascade'
         }),
     description: text(),
-    createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`)
+    createdAt: text('created_at')
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull()
 });
 
 export const outflowRelations = relations(outflowTable, ({ one }) => ({

@@ -1,7 +1,18 @@
+import dotenv from 'dotenv';
 import type { Config } from 'drizzle-kit';
-import { envConfig } from './src/lib/env.config.js';
 
-envConfig();
+const nodeEnv = process.env.NODE_ENV;
+
+const dotenvPath =
+    nodeEnv === 'test'
+        ? '.env.test'
+        : nodeEnv === 'staging'
+          ? '.env.staging'
+          : nodeEnv === 'production'
+            ? '.env.production'
+            : undefined;
+
+dotenv.config({ path: dotenvPath });
 
 export default {
     schema: './build/src/db/schema.js',
