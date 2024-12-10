@@ -17,6 +17,7 @@
         "db:studio": "drizzle-kit studio --config build/drizzle.config.js",
         "db:drop": "drizzle-kit drop --config build/drizzle.config.js",
         "db:push": "drizzle-kit push",
+        "db:push:prod": "cross-env NODE_ENV=production drizzle-kit push",
         "format": "prettier --write .",
         "generateSecrets": "node scripts/generateSecrets.mjs"
     },
